@@ -5,12 +5,8 @@ from boards.models import Board
 
 
 def home(request):
-    response_html = '<ul>'
+    boards = Board.objects.all()
 
-    for board in Board.objects.all():
-        response_html += '<li>' + board.name + '<br>'
-        response_html += board.description + ' topics nb : ' + str(len(board.topics.all())) + '</li>'
+    context = {'boards': boards}
 
-    response_html += '</ul>'
-
-    return HttpResponse(response_html)
+    return render(request, 'home.html', context)

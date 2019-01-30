@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <title>Boards</title>
+    </head>
+    <body>
+        <h1>Boards</h1>
+        <ul>
+            {% for board in boards %}
+            <li>
+                {{board.name}}
+                <br>
+                {{board.description}}
+                <br>
+                topics nb : {{ board.topics }}
+            </li>
+            {% endfor %}
+        </ul>
+    </body>
 </html>
