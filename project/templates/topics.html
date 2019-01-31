@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content %}
-            <button class="btn btn-primary">New topic</button>
+            <a class="btn btn-primary" href="{% url 'new_topic' board.pk %}">New topic</a>
 
             <table class="table">
                 <thead class="thead-dark">

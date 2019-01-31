@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.urls import resolve
 
 from .models import Board
-from .views import home, board_topics
+from .views import home, board_topics, new_topic
 
 
 # Create your tests here.
@@ -39,7 +39,7 @@ class BoardTopicsTests(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
 
-    def test_board_topics_url_resolves_home_view(self):
+    def test_board_topics_url_resolves_board_topics_view(self):
         view = resolve('/boards/1/')
         self.assertEquals(view.func, board_topics)
 
@@ -48,3 +48,22 @@ class BoardTopicsTests(TestCase):
         response= self.client.get(board_topics_url)
         homepage_url = reverse('home')
         self.assertContains(response, 'href="{0}"'.format(homepage_url))
+
+
+class NewTopicTests(TestCase):
+    def setUp(self):
+        Board.objects.create(name='Django', description='Django board')
+
+    def test_new_topic_view_status_code(self):
+        url = reverse('new_topic', kwargs={'pk': 1})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)
+
+    def test_new_topic_view_not_found_status_code(self):
+        url = reverse('new_topic', kwargs={'pk': 10})
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 404)
+
+    def test_new_topic_url_resolves_new_topic_view(self):
+        view = resolve('/boards/1/new/')
+        self.assertEquals(view.func, new_topic)
