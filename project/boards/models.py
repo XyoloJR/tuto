@@ -30,7 +30,7 @@ class Post(models.Model):
     updated_by = models.ForeignKey(User, null=True, related_name='+')
 
     def __str__(self):
-        if len(self.messsage) > 20:
+        if len(self.message) > 20:
             return self.message[:20] + '...'
         else:
             return self.message

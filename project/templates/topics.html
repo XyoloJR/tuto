@@ -14,30 +14,32 @@
 {% endblock %}
 
 {% block content %}
-            <a class="btn btn-primary" href="{% url 'new_topic' board.pk %}">New topic</a>
+    <div class="mb-4">
+        <a class="btn btn-primary" href="{% url 'new_topic' board.pk %}">New topic</a>
+    </div>
 
-            <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Topic</th>
-                        <th>Starter</th>
-                        <th>Replies</th>
-                        <th>Views</th>
-                        <th>Last Update</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for topic in topics %}
-                    <tr>
-                        <td>
-                            {{topic.subject}}<small class="text-muted d-block">{{board.description}}</small>
-                        </td>
-                        <td>{{ topic.starter.name }}</td>
-                        <td class="align-middle">0</td>
-                        <td class="align-middle">0</td>
-                        <td>{{ topic.last_update }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Topic</th>
+                <th>Starter</th>
+                <th>Replies</th>
+                <th>Views</th>
+                <th>Last Update</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for topic in board.topics.all %}
+            <tr>
+                <td>
+                    {{topic.subject}}
+                </td>
+                <td>{{ topic.starter.username }}</td>
+                <td class="align-middle">0</td>
+                <td class="align-middle">0</td>
+                <td>{{ topic.last_update }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
