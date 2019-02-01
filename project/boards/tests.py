@@ -4,6 +4,7 @@ from django.test import TestCase
 from django.urls import resolve
 
 from .models import Board, Topic, Post
+from .forms import NewTopicForm
 from .views import home, board_topics, new_topic
 
 
@@ -84,7 +85,7 @@ class NewTopicTests(TestCase):
             'subject': 'Test title',
             'message': 'Test message content with a pretty long text'
         }
-        response = self.client.post(self.url, data)
+        self.client.post(self.url, data)
         self.assertTrue(Topic.objects.exists())
         self.assertTrue(Post.objects.exists())
 
@@ -94,7 +95,9 @@ class NewTopicTests(TestCase):
         The expected behavior is to show the form again with validation error
         '''
         response = self.client.post(self.url, {})
+        form = response.context.get('form')
         self.assertEquals(response.status_code, 200)
+        self.assertTrue(form.errors)
 
     def test_new_topic_invalid_post_data_empty_fields(self):
         '''
@@ -111,3 +114,7 @@ class NewTopicTests(TestCase):
         self.assertEquals(response.status_code, 200)
         self.assertFalse(Topic.objects.exists())
         self.assertFalse(Post.objects.exists())
+
+    def test_contains_form(self):
+        form = self.response.context.get('form')
+        self.assertIsInstance(form, NewTopicForm)
