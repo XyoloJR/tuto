@@ -32,7 +32,7 @@
             {% for topic in board.topics.all %}
             <tr>
                 <td>
-                    {{topic.subject}}
+                    <a href="{% url 'topic_posts' board.pk topic.pk %}">{{topic.subject}}</a>
                 </td>
                 <td>{{ topic.starter.username }}</td>
                 <td class="align-middle">0</td>
