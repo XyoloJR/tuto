@@ -9,7 +9,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 
 
-
 class PasswordResetTests(TestCase):
     def setUp(self):
         url = reverse('password_reset')
@@ -18,7 +17,7 @@ class PasswordResetTests(TestCase):
     def test_status_code(self):
         self.assertEquals(self.response.status_code, 200)
 
-    def test_view_function(self):
+    def test_url_resolve_correct_view(self):
         view = resolve('/reset/')
         self.assertEquals(view.func.view_class, auth_views.PasswordResetView)
 
