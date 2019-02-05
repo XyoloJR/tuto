@@ -11,6 +11,8 @@ from ..views import home, board_topics, new_topic
 # Create your tests here.
 class HomeTests(TestCase):
     def setUp(self):
+        user = User.objects.create_user(username='john', email='john@doe.com', password='1234pass')
+        self.client.login(username='john', password='1234pass')
         self.board = Board.objects.create(name='Django', description='Django board')
         url = reverse('home')
         self.response = self.client.get(url)
@@ -29,6 +31,8 @@ class HomeTests(TestCase):
 
 class BoardTopicsTests(TestCase):
     def setUp(self):
+        user = User.objects.create_user(username='john', email='john@doe.com', password='1234pass')
+        self.client.login(username='john', password='1234pass')
         self.board = Board.objects.create(name='Django', description='Django board')
         url = reverse('board_topics', kwargs={'pk': self.board.pk})
         self.response = self.client.get(url)
@@ -55,9 +59,9 @@ class BoardTopicsTests(TestCase):
 
 class NewTopicTests(TestCase):
     def setUp(self):
+        user = User.objects.create_user(username='john', email='john@doe.com', password='1234pass')
+        self.client.login(username='john', password='1234pass')
         self.board = Board.objects.create(name='Django', description='Django board')
-        User.objects.create_user(username='john', email='john@doe.com', password='123')
-
         self.url = reverse('new_topic', kwargs={'pk': self.board.pk})
         self.response = self.client.get(self.url)
 
@@ -79,6 +83,10 @@ class NewTopicTests(TestCase):
 
     def test_csrf(self):
         self.assertContains(self.response, 'csrfmiddlewaretoken')
+
+    def test_contains_form(self):
+        form = self.response.context.get('form')
+        self.assertIsInstance(form, NewTopicForm)
 
     def test_new_topic_valid_post_data(self):
         data = {
@@ -115,6 +123,4 @@ class NewTopicTests(TestCase):
         self.assertFalse(Topic.objects.exists())
         self.assertFalse(Post.objects.exists())
 
-    def test_contains_form(self):
-        form = self.response.context.get('form')
-        self.assertIsInstance(form, NewTopicForm)
+
