@@ -40,7 +40,7 @@ def new_topic(request, pk):
                 created_by=user
             )
 
-            return redirect('board_topics', pk=board.pk)  # redirect to topic messages page
+            return redirect('topic_posts', pk=board.pk, topic_pk=topic.pk)
     else:
         form = NewTopicForm()
 
