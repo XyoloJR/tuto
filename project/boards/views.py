@@ -41,10 +41,17 @@ def new_topic(request, pk):
                 created_by=request.user
             )
 
-            return redirect('board_topics', pk=board.pk)  # redirect to topic messages page
+            return redirect('topic_posts', pk=board.pk, topic_pk=topic.pk)
     else:
         form = NewTopicForm()
 
     context = {'board': board, 'form': form}
 
     return render(request, 'new_topic.html', context)
+
+
+def topic_posts(request, pk, topic_pk):
+    topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+
+    context = {'topic': topic}
+    return render(request, 'topic_posts.html', context)
