@@ -25,7 +25,7 @@ class LoginRequiredNewTopicTests(TestCase):
 
 class NewTopicTests(TestCase):
     def setUp(self):
-        user = User.objects.create_user(username='john', email='john@doe.com', password='1234pass')
+        User.objects.create_user(username='john', email='john@doe.com', password='1234pass')
         self.client.login(username='john', password='1234pass')
         self.board = Board.objects.create(name='Django', description='Django board')
         self.url = reverse('new_topic', kwargs={'pk': self.board.pk})
