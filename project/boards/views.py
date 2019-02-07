@@ -56,6 +56,8 @@ def topic_posts(request, pk, topic_pk):
 
     context = {'topic': topic}
     return render(request, 'topic_posts.html', context)
+
+
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, pk=topic_pk, board__pk=pk)
 
