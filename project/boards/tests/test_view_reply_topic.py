@@ -8,11 +8,15 @@ from ..views import reply_topic
 from ..forms import PostForm
 
 
-class ReplyTopicViewTests(TestCase):
+class ReplyTopicTestCase(TestCase):
+    '''
+    Base test case to be used in all 'reply_topic' view tests
+    '''
     def setUp(self):
         self.board = Board.objects.create(name='Django', description='Django board')
-        user = User.objects.create_user(username='john', email='john@doe.com', password='123')
-        self.client.login(username='john', password='123')
+        self.username = 'john'
+        self.password = '123'
+        user = User.objects.create_user(username=self.username, email='john@doe.com', password=self.password)
 
         self.topic = Topic.objects.create(subject='tuto', board=self.board, starter=user)
 
@@ -23,6 +27,25 @@ class ReplyTopicViewTests(TestCase):
         )
 
         self.url = reverse('reply_topic', kwargs={'pk': self.board.pk, 'topic_pk': self.topic.pk})
+
+
+class LoginRequiredReplyTopicTests(ReplyTopicTestCase):
+    def setUp(self):
+        super().setUp()
+        self.response = self.client.get(self.url)
+
+    def test_redirection(self):
+        login_url = reverse('login')
+        self.assertRedirects(
+            self.response,
+            '{login_url}?next={url}'.format(login_url=login_url, url=self.url)
+        )
+
+
+class ReplyTopicViewTests(ReplyTopicTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username=self.username, password=self.password)
         self.response = self.client.get(self.url)
 
     def test_reply_topic_view_status_code(self):
@@ -48,6 +71,12 @@ class ReplyTopicViewTests(TestCase):
     def test_csrf(self):
         self.assertContains(self.response, 'csrfmiddlewaretoken')
 
+
+class SuccessfulReplyTopicTests(ReplyTopicTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username=self.username, password=self.password)
+
     def test_reply_topic_valid_post_data(self):
         data = {
             'message': '''
@@ -57,6 +86,12 @@ class ReplyTopicViewTests(TestCase):
         }
         self.client.post(self.url, data)
         self.assertEquals(Post.objects.count(), 2)
+
+
+class InvalidReplyTopicTests(ReplyTopicTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username=self.username, password=self.password)
 
     def test_new_topic_invalid_post_data(self):
         '''
