@@ -22,7 +22,7 @@
 
 {% block content %}
     <div class="mb-4">
-        <a class="btn btn-primary" href="#">Reply</a>
+        <a class="btn btn-primary" href="{% url 'reply_topic' topic.board.pk topic.pk %}">Reply</a>
     </div>
 
     {% for post in topic.posts.all %}

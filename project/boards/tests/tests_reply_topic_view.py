@@ -37,10 +37,9 @@ class ReplyTopicViewTests(TestCase):
         view = resolve('/boards/1/topics/1/reply/')
         self.assertEquals(view.func, reply_topic)
 
-    # should be integrated with topic_posts view
-    # def test_new_topic_view_contains_link_back_to_topic_posts_view(self):
-    #     topic_posts_url = reverse('topic_posts', kwargs={'pk': self.board.pk, 'topic_pk': self.t})
-    #     self.assertContains(self.response, 'href="{0}"'.format(topic_posts_url))
+    def test_new_topic_view_contains_link_back_to_topic_posts_view(self):
+        topic_posts_url = reverse('topic_posts', kwargs={'pk': self.board.pk, 'topic_pk': self.topic.pk})
+        self.assertContains(self.response, 'href="{0}"'.format(topic_posts_url))
 
     def test_contains_form(self):
         form = self.response.context.get('form')

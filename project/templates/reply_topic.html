@@ -14,7 +14,7 @@
         <a href="{% url 'board_topics' topic.board.pk %}">{{ topic.board.name }}</a>
     </li>
     <li class="breadcrumb-item">
-        <a href="#">{{ topic.subject }}</a>
+        <a href="{% url 'topic_posts' topic.board.pk topic.pk %}">{{ topic.subject }}</a>
     </li>
     <li class="breadcrumb-item active">
         Reply
