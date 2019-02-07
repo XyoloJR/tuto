@@ -52,7 +52,7 @@ def new_topic(request, pk):
 
 @login_required
 def topic_posts(request, pk, topic_pk):
-    topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
+    topic = get_object_or_404(Topic, pk=topic_pk, board__pk=pk)
 
     context = {'topic': topic}
     return render(request, 'topic_posts.html', context)
