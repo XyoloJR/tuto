@@ -58,6 +58,7 @@ def topic_posts(request, pk, topic_pk):
     return render(request, 'topic_posts.html', context)
 
 
+@login_required
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, pk=topic_pk, board__pk=pk)
 
@@ -70,8 +71,7 @@ def reply_topic(request, pk, topic_pk):
             post.created_by = request.user
             post.save()
 
-            return redirect('board_topics', pk=pk)  # should redirect to topic posts
-            # return redirect('topic_post', pk=pk, topic_pk=topic_pk)
+            return redirect('topic_post', pk=pk, topic_pk=topic_pk)
 
     else:
         form = PostForm()

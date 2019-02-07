@@ -2,29 +2,29 @@
 
 
 {% block title %}
-    {{ board.name }} - New Topic
+  {{ board.name }} - New Topic
 {% endblock %}
 
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item">
-        <a href="{% url 'home' %}">Boards</a>
-    </li>
-    <li class="breadcrumb-item">
-        <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
-    </li>
-    <li class="breadcrumb-item active">
-        New Topic
-    </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'home' %}">Boards</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+  </li>
+  <li class="breadcrumb-item active">
+    New Topic
+  </li>
 {% endblock %}
 
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
 
-        {% include 'includes/form.html' %}
+    {% include 'includes/form.html' %}
 
-        <button class="btn btn-primary" type="submit">Post</button>
-    </form>
+    <button class="btn btn-primary" type="submit">Post</button>
+  </form>
 {% endblock %}
