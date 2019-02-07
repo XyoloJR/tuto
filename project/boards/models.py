@@ -23,6 +23,7 @@ class Topic(models.Model):
     last_update = models.DateTimeField(auto_now_add=True, verbose_name='Dernier ajout')
     board = models.ForeignKey(Board, related_name='topics')
     starter = models.ForeignKey(User, related_name='topics')
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.subject

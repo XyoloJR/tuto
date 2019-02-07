@@ -35,8 +35,8 @@
           <a href="{% url 'topic_posts' board.pk topic.pk %}">{{ topic.subject }}</a>
         </td>
         <td>{{ topic.starter.username }}</td>
-        <td class=>{{ topic.replies }}</td>
-        <td class="align-middle">0</td>
+        <td>{{ topic.replies }}</td>
+        <td>{{ topic.views }}</td>
         <td>{{ topic.last_update }}</td>
       </tr>
     {% endfor %}
