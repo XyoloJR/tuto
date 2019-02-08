@@ -94,7 +94,7 @@ def reply_topic(request, pk, topic_pk):
 class PostUpdateView(UpdateView):
     model = Post
     fields = ('message', )
-    template_name = 'edit_post.html'
+    template_name = 'update_post.html'
     pk_url_kwarg = 'post_pk'
     context_object_name = 'post'
 
@@ -103,4 +103,4 @@ class PostUpdateView(UpdateView):
         post.updated_by = self.request.user
         post.updated_at = timezone.now()
         post.save()
-        return redirect('topic_posts', pk=post.topic.board.pk, topik_pk=post.topic.pk)
+        return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
