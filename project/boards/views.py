@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.views.generic import UpdateView, ListView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import NewTopicForm, PostForm
 from .models import Board, Post, Topic
@@ -20,7 +21,21 @@ class HomeView(ListView):
 @login_required
 def board_topics(request, pk):
     board = get_object_or_404(Board, pk=pk)
-    topics = board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+    queryset = board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, 20)
+
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        # fallback to the first page
+        topics = paginator.page(1)
+    except EmptyPage:
+        # probably the user tried to add a page number
+        # in the url, so we fallback to the last page
+        topics = paginator.page(paginator.num_pages)
 
     context = {'board': board, 'topics': topics}
 
