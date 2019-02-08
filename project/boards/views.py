@@ -25,7 +25,7 @@ def board_topics(request, pk):
 
     page = request.GET.get('page', 1)
 
-    paginator = Paginator(queryset, 20)
+    paginator = Paginator(queryset, 10)
 
     try:
         topics = paginator.page(page)
