@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 
@@ -10,12 +10,11 @@ from .models import Board, Post, Topic
 
 
 # Create your views here.
-@login_required
-def home(request):
-    boards = Board.objects.all()
-    context = {'boards': boards}
-
-    return render(request, 'home.html', context)
+@method_decorator(login_required, name='dispatch')
+class HomeView(ListView):
+    model = Board
+    context_object_name = 'boards'
+    template_name = 'home.html'
 
 
 @login_required
