@@ -21,14 +21,15 @@ from boards import views
 from accounts import views as account_views
 
 urlpatterns = [
-    url(r'^$', views.home, name='home'),
+    url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^signup/$', account_views.signup, name='signup'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics'),
+    url(r'^class_boards/(?P<pk>\d+)/$', views.TopicListView.as_view(), name='topics_list'),
+    url(r'^boards/('r'?P<pk>\d+)/$',views.board_topics, name='board_topics'),
     url(r'^boards/(?P<pk>\d+)/new/$', views.new_topic, name='new_topic'),
     url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/$',
-        views.topic_posts,
+        views.PostListView.as_view(),
         name='topic_posts'),
     url(r'^boards/(?P<pk>\d+)/topics/(?P<topic_pk>\d+)/reply/$',
         views.reply_topic,

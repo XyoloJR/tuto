@@ -1,31 +1,63 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .forms import NewTopicForm, PostForm
 from .models import Board, Post, Topic
 
 
 # Create your views here.
-@login_required
-def home(request):
-    boards = Board.objects.all()
-    context = {'boards': boards}
-
-    return render(request, 'home.html', context)
+@method_decorator(login_required, name='dispatch')
+class HomeView(ListView):
+    model = Board
+    context_object_name = 'boards'
+    template_name = 'home.html'
 
 
 @login_required
 def board_topics(request, pk):
     board = get_object_or_404(Board, pk=pk)
-    topics = board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+    queryset = board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(queryset, 10)
+
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        # fallback to the first page
+        topics = paginator.page(1)
+    except EmptyPage:
+        # probably the user tried to add a page number
+        # in the url, so we fallback to the last page
+        topics = paginator.page(paginator.num_pages)
 
     context = {'board': board, 'topics': topics}
 
     return render(request, 'topics.html', context)
+
+
+# alternative to board_topics view serve with 'topic_list' url
+@method_decorator(login_required, name='dispatch')
+class TopicListView(ListView):
+    model = Topic
+    context_object_name = 'topics'
+    template_name = 'topics_list.html'
+    paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        kwargs['board'] = self.board
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.board = get_object_or_404(Board, pk=self.kwargs.get('pk'))
+        queryset = self.board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+        return queryset
 
 
 @login_required
@@ -64,6 +96,28 @@ def topic_posts(request, pk, topic_pk):
 
     context = {'topic': topic}
     return render(request, 'topic_posts.html', context)
+
+
+@method_decorator(login_required, name='dispatch')
+class PostListView(ListView):
+    model = Post
+    context_object_name = 'posts'
+    template_name = 'topic_posts.html'
+    paginate_by = 2
+
+    def get_context_data(self, **kwargs):
+        self.topic.views += 1
+        self.topic.save()
+        kwargs['topic'] = self.topic
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.topic = get_object_or_404(
+            Topic,
+            pk=self.kwargs.get('topic_pk'),
+            board__pk=self.kwargs.get('pk'))
+        queryset = self.topic.posts.order_by('created_at')
+        return queryset
 
 
 @login_required
