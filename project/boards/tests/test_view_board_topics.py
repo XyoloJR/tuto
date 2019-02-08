@@ -52,7 +52,7 @@ class ClassBoardTopicsTests(TestCase):
         response = self.client.get(url)
         self.assertEquals(response.status_code, 404)
 
-    def test_board_topics_url_resolves_board_topics_view(self):
+    def test_board_topics_url_resolves_TopicList_view(self):
         view = resolve('/class_boards/1/')
         self.assertEquals(view.func.view_class, TopicListView)
 

@@ -42,6 +42,7 @@ def board_topics(request, pk):
     return render(request, 'topics.html', context)
 
 
+# alternative to board_topics view serve with 'topic_list' url
 @method_decorator(login_required, name='dispatch')
 class TopicListView(ListView):
     model = Topic
