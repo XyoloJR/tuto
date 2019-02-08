@@ -42,6 +42,23 @@ def board_topics(request, pk):
     return render(request, 'topics.html', context)
 
 
+@method_decorator(login_required, name='dispatch')
+class TopicListView(ListView):
+    model = Topic
+    context_object_name = 'topics'
+    template_name = 'topics_list.html'
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        kwargs['board'] = self.board
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        self.board = get_object_or_404(Board, pk=self.kwargs.get('pk'))
+        queryset = self.board.topics.order_by('-last_update').annotate(replies=Count('posts') - 1)
+        return queryset
+
+
 @login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
