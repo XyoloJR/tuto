@@ -25,8 +25,10 @@
     <a class="btn btn-primary" href="{% url 'reply_topic' topic.board.pk topic.pk %}">Reply</a>
   </div>
 
-  {% for post in topic.posts.all %}
-    <div class="card mb-2 {% if forloop.first %}border-dark{% endif %}">
+  {% for post in posts %}
+    <div class="card {% if forloop.first %}border-dark{% endif %}
+      {% if forloop.last %}mb-4{% else %}mb-2{% endif %}"
+    >
       {% if forloop.first %}
         <div class="card-header text-white bg-dark py-2 px-3">
         {{ topic.subject }}
@@ -53,7 +55,8 @@
             {% if user == post.created_by %}
               <div class="mt-3">
                 <a class="btn btn-primary btn-sm"
-                   href="{% url 'update_post' topic.board.pk topic.pk post.pk %}">
+                   href="{% url 'update_post' topic.board.pk topic.pk post.pk %}"
+                   role="button">
                   Edit
                 </a>
               </div>
@@ -63,5 +66,7 @@
       </div>
     </div>
   {% endfor %}
+
+  {% include 'includes/pagination.html' %}
 
 {% endblock %}
