@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block title %}
 Edit post
+{% endblock %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/simplemde.min.css' %}">
 {% endblock %}
 
 {% block breadcrumb %}
@@ -9,7 +15,7 @@ Edit post
   <a href="{% url 'home' %}">Boards</a>
 </li>
 <li class="breadcrumb-item">
-  <a href="{% url 'board_topics' post.topic.board.pk%}">
+  <a href="{% url 'topics_list' post.topic.board.pk%}">
     {{ post.topic.board.name }}
   </a>
 </li>
@@ -28,6 +34,16 @@ Edit post
     {% csrf_token %}
     {% include 'includes/form.html' %}
     <button class="btn btn-success" type="submit">Save changes</button>
-    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-secondary" role="button">Cancel</a>
+    <a href="{% url 'topic_posts' post.topic.board.pk post.topic.pk %}" class="btn btn-outline-secondary" role="button">
+      Cancel
+    </a>
   </form>
+{% endblock %}
+
+
+{% block javascript %}
+  <script src="{% static 'js/simplemde.min.js' %}"></script>
+  <script>
+    var simplemde = new SimpleMDE();
+  </script>
 {% endblock %}
