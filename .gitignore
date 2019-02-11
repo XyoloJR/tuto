@@ -1,5 +1,13 @@
+# cache
 __pycache__/
 *.py[cod]
+
+# pyCharm
 .idea/
+
+#python-decouple
+.env
+
+# database
 *.orig
 *.sqlite3
