@@ -26,7 +26,7 @@
   </div>
 
   {% for post in posts %}
-    <div class="card {% if forloop.first %}border-dark{% endif %}
+    <div id="{{ post.pk }}" class="card {% if forloop.first %}border-dark{% endif %}
       {% if forloop.last %}mb-4{% else %}mb-2{% endif %}"
     >
       {% if forloop.first %}
