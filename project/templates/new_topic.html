@@ -1,17 +1,22 @@
 {% extends 'base.html' %}
 
+{% load static %}
 
 {% block title %}
   {{ board.name }} - New Topic
 {% endblock %}
 
 
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/simplemde.min.css' %}">
+{% endblock %}
+
 {% block breadcrumb %}
   <li class="breadcrumb-item">
     <a href="{% url 'home' %}">Boards</a>
   </li>
   <li class="breadcrumb-item">
-    <a href="{% url 'board_topics' board.pk %}">{{ board.name }}</a>
+    <a href="{% url 'topics_list' board.pk %}">{{ board.name }}</a>
   </li>
   <li class="breadcrumb-item active">
     New Topic
@@ -20,11 +25,19 @@
 
 
 {% block content %}
-  <form method="post">
+  <form method="post" class="mb-4" novalidate>
     {% csrf_token %}
 
     {% include 'includes/form.html' %}
 
     <button class="btn btn-primary" type="submit">Post</button>
   </form>
+{% endblock %}
+
+
+{% block javascript %}
+  <script src="{% static 'js/simplemde.min.js' %}"></script>
+  <script>
+    var simplemde = new SimpleMDE();
+  </script>
 {% endblock %}
